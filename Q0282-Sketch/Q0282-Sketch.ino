@@ -24,8 +24,11 @@ void conectaMQTT();     //Faz conexão com Broker MQTT
 void recebePacote(char* topic, byte* payload, unsigned int length);
 void enviaPacote();
 
+int sensorPin = 14;
+bool leituraSensor;
 void setup() {
-  pinMode(pinLED1, OUTPUT);         
+  pinMode(pinLED1, OUTPUT);
+  pinMode(sensorPin, INPUT);         
 
   Serial.begin(115200);
 
@@ -35,8 +38,11 @@ void setup() {
 }
 
 void loop() {
+  leituraSensor = digitalRead(sensorPin);
+  Serial.println("SENSOR val: "+ leituraSensor);
+  
   mantemConexoes();
-  enviaPacote();
+  enviaPacote(leituraSensor);
   MQTT.loop();
 }
 
@@ -107,13 +113,15 @@ void recebePacote(char* topic, byte* payload, unsigned int length)
     }
 }
 
-void enviaPacote()
+void enviaPacote(bool leituraSensor)
 {
-  int ativacao = 1;
-  while(ativacao == 1)
-  {
-    MQTT.publish(TOPIC_PUBLISH, "HELLOWORLD");
-    Serial.println("mandado");
-    delay(1000);
+  
+  if(leituraSensor==HIGH) {
+    MQTT.publish(TOPIC_PUBLISH, "alta");
+  } 
+  else {
+    MQTT.publish(TOPIC_PUBLISH, "baixa");
   }
+  delay(1000);
+  
 }
