@@ -14,6 +14,7 @@ int BROKER_PORT = 1883;                      // Porta do Broker MQTT
 
 #define ID_MQTT  "TESTE_MQTT_YAYAYA"             //Informe um ID unico e seu. Caso sejam usados IDs repetidos a ultima conexão irá sobrepor a anterior. 
 #define TOPIC_SUBSCRIBE "TOPIC_TESTE_NOOBY"   //Informe um Tópico único. Caso sejam usados tópicos em duplicidade, o último irá eliminar o anterior.
+#define TOPIC_PUBLISH "TOPIC_TESTE_YAYAYA"
 PubSubClient MQTT(wifiClient);        // Instancia o Cliente MQTT passando o objeto espClient
 
 //Declaração das Funções
@@ -21,6 +22,7 @@ void mantemConexoes();  //Garante que as conexoes com WiFi e MQTT Broker se mant
 void conectaWiFi();     //Faz conexão com WiFi
 void conectaMQTT();     //Faz conexão com Broker MQTT
 void recebePacote(char* topic, byte* payload, unsigned int length);
+void enviaPacote();
 
 void setup() {
   pinMode(pinLED1, OUTPUT);         
@@ -34,6 +36,7 @@ void setup() {
 
 void loop() {
   mantemConexoes();
+  enviaPacote();
   MQTT.loop();
 }
 
@@ -102,4 +105,15 @@ void recebePacote(char* topic, byte* payload, unsigned int length)
     if (msg == "1") {
        digitalWrite(pinLED1, HIGH);
     }
+}
+
+void enviaPacote()
+{
+  int ativacao = 1;
+  while(ativacao == 1)
+  {
+    MQTT.publish(TOPIC_PUBLISH, "HELLOWORLD");
+    Serial.println("mandado");
+    delay(1000);
+  }
 }
