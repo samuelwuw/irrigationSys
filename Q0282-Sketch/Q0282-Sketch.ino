@@ -1,8 +1,6 @@
 #include <WiFi.h> 
 #include <PubSubClient.h>
 
-#define pinLED1 32  //GP2 ESP-01
-
 //WiFi
 const char* SSID = "Brancadeneve";                // SSID / nome da rede WiFi que deseja se conectar
 const char* PASSWORD = "SantoTeres17";   // Senha da rede WiFi que deseja se conectar
@@ -24,8 +22,12 @@ void conectaMQTT();     //Faz conexão com Broker MQTT
 void recebePacote(char* topic, byte* payload, unsigned int length);
 void enviaPacote();
 
-int sensorPin = 14;
+#define pinLED1 32  //Rele
+int sensorPin = 14; //sensor
 bool leituraSensor;
+bool leituraSensorAut;
+bool isAutomatic = false;
+
 void setup() {
   pinMode(pinLED1, OUTPUT);
   pinMode(sensorPin, INPUT);         
@@ -38,12 +40,29 @@ void setup() {
 }
 
 void loop() {
-  leituraSensor = digitalRead(sensorPin);
-  Serial.println("SENSOR val: "+ leituraSensor);
+  if(isAutomatic == true){
+    automatic();
+  }
   
   mantemConexoes();
-  enviaPacote(leituraSensor);
+  enviaPacote();
   MQTT.loop();
+  delay(1000);
+}
+
+void automatic(){
+  //se leitura=HIGH, umidade baixa
+  leituraSensorAut = digitalRead(sensorPin);
+
+  if(leituraSensorAut == HIGH){
+    digitalWrite(pinLED1, HIGH);
+    Serial.println("ativadoooooou");
+  }
+  if(leituraSensorAut == LOW){
+    digitalWrite(pinLED1, LOW);
+    Serial.println("desligado");
+  }
+  delay(3000);
 }
 
 void mantemConexoes() {
@@ -111,17 +130,27 @@ void recebePacote(char* topic, byte* payload, unsigned int length)
     if (msg == "1") {
        digitalWrite(pinLED1, HIGH);
     }
+
+    if (msg == "3"){
+      Serial.println("AUTOMATICO DESLIGADO");
+      isAutomatic = false;
+    }
+
+    if (msg == "4"){
+      Serial.println("AUTOMATICO LIGADO");
+      isAutomatic = true;
+    }
 }
 
-void enviaPacote(bool leituraSensor)
+void enviaPacote()
 {
+  leituraSensor = digitalRead(sensorPin);
   
   if(leituraSensor==HIGH) {
-    MQTT.publish(TOPIC_PUBLISH, "alta");
+    MQTT.publish(TOPIC_PUBLISH, "baixa");
   } 
   else {
-    MQTT.publish(TOPIC_PUBLISH, "baixa");
+    MQTT.publish(TOPIC_PUBLISH, "alta");
   }
-  delay(1000);
   
 }
