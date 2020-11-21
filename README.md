@@ -10,3 +10,5 @@ O sistema conta com funcionamento automático, implementado na função automati
 e se ela estiver abaixo do desejado, há a ativação do módulo relê.
 O sistema também conta com acionamento remoto, acessado e testado no aplicativo para mobile mqtt dash.
 
+O circuito pode ser visualizado a seguir:
+<img src="https://github.com/samuelwuw/irrigationSys/blob/main/fluxograma/diagrama_circuito.jpeg">
