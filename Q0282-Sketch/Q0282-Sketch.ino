@@ -56,13 +56,14 @@ void automatic(){
 
   if(leituraSensorAut == HIGH){
     digitalWrite(pinLED1, HIGH);
-    Serial.println("ativadoooooou");
+    delay(800);
+    digitalWrite(pinLED1, LOW);
+    Serial.println("irrigação feita");
   }
   if(leituraSensorAut == LOW){
     digitalWrite(pinLED1, LOW);
     Serial.println("desligado");
   }
-  delay(3000);
 }
 
 void mantemConexoes() {
@@ -129,6 +130,8 @@ void recebePacote(char* topic, byte* payload, unsigned int length)
 
     if (msg == "1") {
        digitalWrite(pinLED1, HIGH);
+       delay(2000);
+       digitalWrite(pinLED1,LOW);
     }
 
     if (msg == "3"){
