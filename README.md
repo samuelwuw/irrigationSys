@@ -11,7 +11,7 @@ e se ela estiver abaixo do desejado, há a ativação do módulo relê.
 O sistema também conta com acionamento remoto, acessado e testado no aplicativo para mobile mqtt dash.
 
 O circuito pode ser visualizado a seguir:
-<img src="https://github.com/samuelwuw/irrigationSys/blob/main/fluxograma/cuircuitDiagram2.fzz">
+<img src="https://github.com/samuelwuw/irrigationSys/blob/main/fluxograma/circuitImage.png">
 
 Segue também os diagramas das principais funções: loop(), recebePacote(), automatic()
 
